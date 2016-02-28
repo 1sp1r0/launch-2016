@@ -2,6 +2,8 @@ var chalk = require('chalk');
 var firebase = require('firebase');
 var firebaseReference = new firebase('https://launch2016.firebaseio.com/teams');
 
+var startedBots = [];
+
 var runBot = function(teamtoken){
 
 	var Botkit = require('botkit');
@@ -45,7 +47,10 @@ var runBots = function(){
 				if(teams[team].bot && teams[team].bot.bot_access_token){
 					
 					console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
-					runBot(teams[team].bot.bot_access_token);
+					if(startedBots.indexOf(team) < 0) {
+						startedBots.push(team);
+						return runBot(teams[team].bot.bot_access_token);
+					}
 					
 				} else {
 

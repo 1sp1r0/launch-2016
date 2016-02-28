@@ -68,7 +68,7 @@ var request = function(method, options, callback){
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  res.render('index', { title: 'Huddle', content: 'Simplifying team meetings since 2016!' });
+  res.render('index', { title: 'Huddle', content: 'Continuing to make teams less since 2016!' });
 
 });
 
