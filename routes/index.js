@@ -180,8 +180,7 @@ router.get('/slack/oauth', function(req, res){
 				}
 
 				res.content = content
-
-				return  res.redirec('/success');
+				return  res.redirect('/success');
 
 			});		
 
