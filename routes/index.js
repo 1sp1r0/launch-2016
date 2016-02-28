@@ -5,12 +5,65 @@ var http = require('http');
 var https = require('https');
 var querystring = require('querystring');
 
+var Botkit = require('botkit');
+var controller = Botkit.slackbot();
+
 var SLACK_CLIENT_STATE = "inn-launch2016";
 var SLACK_CLIENT_ID = '23387650483.23407311957';
 var SLACK_CLIENT_SECRET = 'b2648544f13c22178945dc74f18f3bcd';
 
-var ACCESS_TOKEN = null;
+var ACCESS_TOKEN = { ok: true,
+  access_token: 'xoxp-23387650483-23390422928-23414077058-fc2fdd74fb',
+  scope: 'identify,commands,channels:read,groups:read,team:read,users:read,usergroups:read,channels:write,chat:write:user,chat:write:bot,groups:write,bot',
+  team_name: 'The Genial Schemer Workshop',
+  team_id: 'T0PBDK4E7',
+  bot: 
+   { bot_user_id: 'U0PC6SW6M',
+     bot_access_token: 'xoxb-23414914225-5z3ZNMJPJtHOJQRlJkXFffMC' } };
+
 var REDIRECT_URI = 'http://104.154.83.36/slack/oauth';
+
+var request = function(method, options, callback){
+
+	var slackrequest = https.request(options, function(slackresponse){
+		
+		var body = '';
+		slackresponse.setEncoding('utf-8');
+		slackresponse.on('data', function(data){	
+			body += data;
+		});
+
+		slackresponse.on('end', function(){
+			
+			var json = null;
+
+			try {
+
+				json = JSON.parse(body);
+
+			} catch(e){
+
+				console.error(method, e);
+				return callback(e);
+
+			}
+
+			return callback(null, json);
+
+		});
+
+		slackresponse.on('error', function(error){
+
+			console.error(method, 'Error', error);
+			return callback(error);
+
+		});
+
+	});
+
+	return slackrequest.end();
+
+};
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -62,47 +115,19 @@ router.get('/slack/oauth', function(req, res){
 			path: ['/api/oauth.access', query].join("?")
 		};
 		
-		var slackrequest = https.request(options, function(slackresponse){
+		request("[/slack/oauth]", options, function(error, body){
+
+			var content = {
+				title: 'Huddle', 
+				content: "Installed Successfully!"
+			};
+
+			if(error) content.content = "Failed to Install :(";
+			else ACCESS_TOKEN = body;
 			
-			var body = '';
-			slackresponse.setEncoding('utf-8');
-			slackresponse.on('data', function(data){	
-				body += data;
-			});
-
-			slackresponse.on('end', function(){
-				
-				var json = null;
-
-				try {
-
-					json = JSON.parse(body);
-
-				} catch(e){
-
-					console.error('[/slack/oauth]', e);
-										
-				}
-
-				ACCESS_TOKEN = json;
-				var content = {
-					title: 'Huddle', 
-					content: "Installed Successfully!"
-				};
-				
-				return res.render('index', content);
-
-			});
-
-			slackresponse.on('error', function(error){
-
-				console.error('[/slack/oauth/] Error', error);
-
-			});
+			return res.render('index', content);
 
 		});
-
-		return slackrequest.end();
 
 	}
 	
@@ -110,51 +135,26 @@ router.get('/slack/oauth', function(req, res){
 
 router.get('/slack/rtm', function(req, res){
 
-	var query = querystring.stringify({
+	var bot = controller.spawn({
 		token: ACCESS_TOKEN.bot.bot_access_token
 	});
 
-	var options = {
-		method: 'GET',
-		hostname: 'slack.com',
-		path: ['/api/rtm.start', query].join("?")
-	};
-		
-	var slackrequest = https.request(options, function(slackresponse){
-		
-		var body = '';
-		slackresponse.setEncoding('utf-8');
-		slackresponse.on('data', function(data){	
-			body += data;
-		});
+	bot.startRTM(function(error, bot, payload){
 
-		slackresponse.on('end', function(){
-			
-			var json = null;
+		if(error){
 
-			try {
+			return console.error("[/slack/rtm] Couldn't connect to the client because: ", error);
 
-				json = JSON.parse(body);
+		}
 
-			} catch(e){
+		controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
 
-				console.error('[/slack/rtm]', e);
-									
-			}
+			bot.startCoversation('Hi');
 
-			console.log("\n\n", body, "\n\n");
+		})
 
-		});
-
-		slackresponse.on('error', function(error){
-
-			console.error('[/slack/rtm/] Error', error);
-
-		});
 
 	});
-
-	return slackrequest.end();
 
 });
 
