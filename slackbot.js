@@ -15,22 +15,29 @@ module.exports = function(){
 			
 			for(var team in teams){
 
-				console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
+				if(teams[team].bot && teams[team].bot.bot_access_token){
+					
+					console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
 
-				var bot = controller.spawn({
-				  token: teams[team].bot.bot_access_token
-				}).startRTM();
+					var bot = controller.spawn({
+					  token: teams[team].bot.bot_access_token
+					}).startRTM();
 
-				controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
+					controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
 
-					console.log(JSON.stringify(message, null, 2));
-				  	bot.reply(message, "hi you!");
+						console.log(JSON.stringify(message, null, 2));
+					  	bot.reply(message, "hi you!");
 
-				});
+					});
+				
+				} else {
 
+					console.error(chalk.red(team), "was saved incorrectly.");
 
+				}
+			
 			}
-
+		
 		}
 
 	});
