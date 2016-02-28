@@ -134,9 +134,7 @@ router.get('/slack/oauth', function(req, res){
 					if(!snapshot.exists()){
 
 						// Create the firebase object to save the tokens for this particular team.
-						var object = {};
-						object[body.team_id] = body;
-						huddleFirebase.set(object);
+						huddleFirebase.child(body.team_id).set(body);
 						
 						// Start the bot for the newly added team.
 						slackbot.runBot(body.bot.bot_access_token);
