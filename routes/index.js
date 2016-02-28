@@ -119,7 +119,7 @@ router.get('/slack', function(req, res, next){
 router.get('/slack/oauth', function(req, res){
 
 	var content = {
-		view: "success",
+		view: "base",
 		viewcontent: {
 			title: 'Huddle', 
 			content: "Installed Successfully! Hop into Slack and call up some huddles."
@@ -149,7 +149,6 @@ router.get('/slack/oauth', function(req, res){
 
 				if(error) {
 					content.viewcontent.content = "Failed to Install huddle into the team. :(";
-					content.view = "base";
 				}
 				
 				if(body && body.team_id && body.bot.bot_access_token){
@@ -170,7 +169,7 @@ router.get('/slack/oauth', function(req, res){
 
 							console.log(chalk.yellow(body.team_name), "team already exists!");
 							content.viewcontent.content = "Your team already has Huddle integrated into Slack! Way to go!";
-							content.view = "base";	
+						
 						}
 
 					});
@@ -200,12 +199,6 @@ router.get('/slack/oauth', function(req, res){
 
 	}
 	
-});
-
-router.get('/success', function(req, res, next){
-
-	res.render('/base', res.content);
-
 });
 
 module.exports = router;
