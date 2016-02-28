@@ -11,7 +11,7 @@ var runBot = function(teamtoken){
 	  token: teamtoken
 	}).startRTM(function(error, bot, payload){
 
-		console.log(JSON.stringify(payload, null, 2));
+		// console.log(JSON.stringify(payload, null, 2));
 
 	});
 

@@ -166,7 +166,7 @@ router.get('/slack/oauth', function(req, res){
 							console.log(chalk.yellow(body.team_name), "team already exists!");
 							content.content = "Your team already has Huddle integrated into Slack! Way to go!";
 							
-							res.content = content;
+							res.CONTENT = content;
 							return res.redirect('/success');
 						
 						}
@@ -181,7 +181,7 @@ router.get('/slack/oauth', function(req, res){
 
 				}
 
-				res.content = content
+				res.CONTENT = content
 				return  res.redirect('/success');
 
 			});		
@@ -192,7 +192,9 @@ router.get('/slack/oauth', function(req, res){
 
 		console.log("[/slack/oauth] Exception raised", chalk.red(e));
 		content.content = "Oh Man! Something's not right. Please try again later.";
-		return res.render('base', content);
+
+		res.CONTENT = content;
+		return res.redirect('/base');
 
 	}
 	
@@ -200,7 +202,7 @@ router.get('/slack/oauth', function(req, res){
 
 router.get('/success', function(req, res, next){
 
-	res.render('/base', res.content);
+	return res.render('/base', res.CONTENT);
 
 });
 
