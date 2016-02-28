@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var http = require('http');
+var chalk = require('chalk');
 var https = require('https');
 var firebase = require('firebase');
 var querystring = require('querystring');
@@ -125,10 +126,21 @@ router.get('/slack/oauth', function(req, res){
 			
 			var huddleFirebase = new firebase('https://launch2016.firebaseio.com/teams');
 
-			var object = {};
+			huddleFirebase.child(body.team_id).once('value', function(snapshot){
 
-			object[body.team_id] = body;
-			huddleFirebase.set(object);
+				if(!snapshot.exists()){
+
+					var object = {};
+					object[body.team_id] = body;
+					huddleFirebase.set(object);
+				
+				} else {
+
+					console.log(chalk.yellow(body.team_name), "team already exists!");
+
+				}
+
+			})
 
 
 			return res.render('index', content);
