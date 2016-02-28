@@ -179,7 +179,7 @@ router.get('/slack/oauth', function(req, res){
 
 				}
 
-				return  res.render('/success', content;
+				return  res.render('/success', content);
 
 			});		
 
