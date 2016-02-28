@@ -169,7 +169,9 @@ router.get('/slack/oauth', function(req, res){
 
 				});
 
-				return res.render('base', content);
+				res.content = content
+
+				return  res.redirec('/success');
 
 			});		
 
@@ -185,6 +187,10 @@ router.get('/slack/oauth', function(req, res){
 	
 });
 
+router.get('/success', function(req, res, next){
 
+	res.render('/base', res.content);
+
+});
 
 module.exports = router;
