@@ -147,27 +147,36 @@ router.get('/slack/oauth', function(req, res){
 				if(error) content.content = "Failed to Install huddle into the team. :(";
 				else ACCESS_TOKEN = body;
 				
-				var huddleFirebase = new firebase('https://launch2016.firebaseio.com/teams');
+				if(body && body.team_id && body.bot.bot_access_token){
 
-				huddleFirebase.child(body.team_id).once('value', function(snapshot){
+					var huddleFirebase = new firebase('https://launch2016.firebaseio.com/teams');
 
-					if(!snapshot.exists() && body.team_id){
+					huddleFirebase.child(body.team_id).once('value', function(snapshot){
 
-						// Create the firebase object to save the tokens for this particular team.
-						huddleFirebase.child(body.team_id).set(body);
+						if(!snapshot.exists() && body.team_id){
+
+							// Create the firebase object to save the tokens for this particular team.
+							huddleFirebase.child(body.team_id).set(body);
+							
+							// Start the bot for the newly added team.
+							slackbot.runBot(body.bot.bot_access_token);
+
+						} else {
+
+							console.log(chalk.yellow(body.team_name), "team already exists!");
+							content.content = "Your team already has Huddle integrated into Slack! Way to go!";
+							return res.render('base', content);
 						
-						// Start the bot for the newly added team.
-						slackbot.runBot(body.bot.bot_access_token);
+						}
 
-					} else {
+					});
+				
+				} else {
 
-						console.log(chalk.yellow(body.team_name), "team already exists!");
-						content.content = "Your team already has Huddle integrated into Slack! Way to go!";
-						return res.render('base', content);
-					
-					}
+					console.log(chalk.red(req.url, "was used."));
+					return res.redirect('/');
 
-				});
+				}
 
 				res.content = content
 

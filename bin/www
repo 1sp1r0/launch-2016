@@ -100,14 +100,14 @@ if(cluster.isMaster){
   cluster.on('exit', function(worker, code, signal){
 
     console.error("\n\n\n\n\nExit: ", chalk.bold.red(JSON.stringify(worker, null, 2), "died!\n", code, "\n", signal), "\n\n\n\n\n\n");
-    cluster.fork();
+    return cluster.fork();
 
   });
 
   cluster.on('error', function(){
 
     console.error("\n\n\n\n\nError: ", chalk.bold.red(JSON.stringify(worker, null, 2), "died!\n", code, "\n", signal), "\n\n\n\n\n\n");
-    cluster.fork();
+    return cluster.fork();
 
   });
 
