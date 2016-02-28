@@ -1,6 +1,9 @@
 extends layout
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+	section.hero.is-fullheight.is-dark.is-bold
+		.hero-content
+			.container
+				a(href="/")
+					h1.title Huddle
+				h2.subtitle= statuscode
