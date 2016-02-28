@@ -165,7 +165,9 @@ router.get('/slack/oauth', function(req, res){
 
 							console.log(chalk.yellow(body.team_name), "team already exists!");
 							content.content = "Your team already has Huddle integrated into Slack! Way to go!";
-							return res.render('base', content);
+							
+							res.content = content;
+							return res.redirect('/success');
 						
 						}
 
