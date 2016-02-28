@@ -148,7 +148,10 @@ router.get('/slack/oauth', function(req, res){
 			request("[/slack/oauth]", options, function(error, body){
 
 				if(error) {
+					
 					content.viewcontent.content = "Failed to Install huddle into the team. :(";
+					return res.render(content.view, content.viewcontent);
+
 				}
 				
 				if(body && body.team_id && body.bot.bot_access_token){
@@ -169,8 +172,11 @@ router.get('/slack/oauth', function(req, res){
 
 							console.log(chalk.yellow(body.team_name), "team already exists!");
 							content.viewcontent.content = "Your team already has Huddle integrated into Slack! Way to go!";
+							return res.render(content.view, content.viewcontent);
 						
 						}
+
+						return res.render(content.view, content.viewcontent);
 
 					});
 				
@@ -182,9 +188,9 @@ router.get('/slack/oauth', function(req, res){
 
 				}
 
-				res.path = "/success";
-				res.url = "/success";
-				return res.render(content.view, content.viewcontent);
+				// res.path = "/success";
+				// res.url = "/success";
+				// return res.render(content.view, content.viewcontent);
 
 			}.bind(this));		
 
