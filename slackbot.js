@@ -11,14 +11,14 @@ module.exports = function(){
 
 		var teams = snapshot.val();
 
-		if(teams.length > 0){
+		if(teams){
 			
-			for(var team in snapshot.val()){
+			for(var team in teams){
 
 				console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
 
 				var bot = controller.spawn({
-				  token: team.bot.bot_access_token
+				  token: teams[team].bot.bot_access_token
 				}).startRTM();
 
 				controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
