@@ -9,7 +9,11 @@ var runBot = function(teamtoken){
 
 	var bot = controller.spawn({
 	  token: teamtoken
-	}).startRTM();
+	}).startRTM(function(error, bot, payload){
+
+		console.log(JSON.stringify(payload, null, 2));
+
+	});
 
 	controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
 
