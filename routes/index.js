@@ -67,7 +67,27 @@ var request = function(method, options, callback){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
   res.render('index', { title: 'Huddle', content: 'Welcome to huddle' });
+
+});
+
+router.get('/support', function(req, res, next) {
+
+  res.render('support');
+
+});
+
+router.get('/instructions', function(req, res, next){
+
+	res.render('instructions');
+
+});
+
+router.get('/instruction', function(req, res, next){
+
+	res.render('support');
+
 });
 
 router.get('/slack', function(req, res, next){

@@ -3,5 +3,21 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Jura:300|Pacifico|Rochester')
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.0.15/css/bulma.min.css')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
+  
   body
+
     block content
+
+    footer.footer
+      .container
+        .content.is-centered
+          p.is-centered
+            strong Huddle
+            |  by 
+            a(href='#') Ian Ndicu @ 
+            a(href='http://www.launchhackathon.com/', target="_blank") Launch 2016
+            a.icon(href='https://github.com/BlackAngus/launch-2016')
+              i.fa.fa-github

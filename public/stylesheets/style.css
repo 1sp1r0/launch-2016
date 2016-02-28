@@ -1,6 +1,12 @@
-body {
+body * {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Jura', sans-serif;
+  font-size: 16px;
+}
+
+h1.title {
+	font-family: 'Rochester', cursive;
+	font-size: 150px;
 }
 
 a {
