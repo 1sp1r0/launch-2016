@@ -1,4 +1,20 @@
-module.exports = function(){
+
+module.exports.runBot = function(teamtoken){
+
+	var bot = controller.spawn({
+	  token: teamtoken
+	}).startRTM();
+
+	controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
+
+		console.log(JSON.stringify(message, null, 2));
+	  	bot.reply(message, "hi you!");
+
+	});
+
+};
+
+module.exports.runBots = function(){
 
 	var chalk = require('chalk');
 	var Botkit = require('botkit');
@@ -18,17 +34,8 @@ module.exports = function(){
 				if(teams[team].bot && teams[team].bot.bot_access_token){
 					
 					console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
-
-					var bot = controller.spawn({
-					  token: teams[team].bot.bot_access_token
-					}).startRTM();
-
-					controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
-
-						console.log(JSON.stringify(message, null, 2));
-					  	bot.reply(message, "hi you!");
-
-					});
+					runBot(teams[team].bot.bot_access_token);
+					
 				
 				} else {
 

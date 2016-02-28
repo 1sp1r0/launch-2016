@@ -5,6 +5,7 @@ var http = require('http');
 var chalk = require('chalk');
 var https = require('https');
 var firebase = require('firebase');
+var slackbot = require('../slackbot');
 var querystring = require('querystring');
 
 var SLACK_CLIENT_STATE = "inn-launch2016";
@@ -97,55 +98,70 @@ router.get('/slack', function(req, res, next){
 
 router.get('/slack/oauth', function(req, res){
 
-	if(req.query.code && req.query.state === SLACK_CLIENT_STATE){
-		
-		console.log("\n\nQUERY\n", req.query);
-		
-		var query = querystring.stringify({
-			client_id: SLACK_CLIENT_ID,
-            client_secret: SLACK_CLIENT_SECRET,
-			code: req.query.code,
-			redirect_url: REDIRECT_URI
-		});
-		
-		var options = {
-			method: 'GET',
-			hostname: 'slack.com',
-			path: ['/api/oauth.access', query].join("?")
-		};
-		
-		request("[/slack/oauth]", options, function(error, body){
+	try {
 
-			var content = {
-				title: 'Huddle', 
-				content: "Installed Successfully!"
-			};
-
-			if(error) content.content = "Failed to Install :(";
-			else ACCESS_TOKEN = body;
+		if(req.query.code && req.query.state === SLACK_CLIENT_STATE){
 			
-			var huddleFirebase = new firebase('https://launch2016.firebaseio.com/teams');
+			console.log("\n\nQUERY\n", req.query);
+			
+			var query = querystring.stringify({
+				client_id: SLACK_CLIENT_ID,
+	            client_secret: SLACK_CLIENT_SECRET,
+				code: req.query.code,
+				redirect_url: REDIRECT_URI
+			});
+			
+			var options = {
+				method: 'GET',
+				hostname: 'slack.com',
+				path: ['/api/oauth.access', query].join("?")
+			};
+			
+			request("[/slack/oauth]", options, function(error, body){
 
-			huddleFirebase.child(body.team_id).once('value', function(snapshot){
+				var content = {
+					title: 'Huddle', 
+					content: "Installed Successfully!"
+				};
 
-				if(!snapshot.exists()){
-
-					var object = {};
-					object[body.team_id] = body;
-					huddleFirebase.set(object);
+				if(error) content.content = "Failed to Install :(";
+				else ACCESS_TOKEN = body;
 				
-				} else {
+				var huddleFirebase = new firebase('https://launch2016.firebaseio.com/teams');
 
-					console.log(chalk.yellow(body.team_name), "team already exists!");
+				huddleFirebase.child(body.team_id).once('value', function(snapshot){
 
-				}
+					if(!snapshot.exists()){
 
-			})
+						// Create the firebase object to save the tokens for this particular team.
+						var object = {};
+						object[body.team_id] = body;
+						huddleFirebase.set(object);
+						
+						// Start the bot for the newly added team.
+						slackbot.runBot(body.bot.bot_access_token);
 
+					} else {
 
-			return res.render('index', content);
+						console.log(chalk.yellow(body.team_name), "team already exists!");
+						content.content = "Your team already has Huddle integrated into slack! Way to go!";
+						return res.render('index', content);
+					
+					}
 
-		});
+				});
+
+				return res.render('index', content);
+
+			});		
+
+		}
+
+	} catch(e){
+
+		console.log("[/slack/oauth] Exception raised", chalk.red(e));
+		content.content = "Oh Man! We messed up, please try again later.";
+		return res.render('index', content);
 
 	}
 	
