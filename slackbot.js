@@ -1,5 +1,6 @@
 module.exports = function(){
-	
+
+	var chalk = require('chalk');
 	var Botkit = require('botkit');
 	var firebase = require('firebase');
 	var controller = Botkit.slackbot();
@@ -8,20 +9,27 @@ module.exports = function(){
 
 	firebaseReference.on('value', function(snapshot){
 
-		for(var team in snapshot.val()){
+		var teams = snapshot.val();
 
-			console.log(team)
+		if(teams.length > 0){
+			
+			for(var team in snapshot.val()){
 
-			var bot = controller.spawn({
-			  token: team.bot.bot_access_token
-			}).startRTM();
+				console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
 
-			controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
+				var bot = controller.spawn({
+				  token: team.bot.bot_access_token
+				}).startRTM();
 
-			  	bot.reply(message, "hi you!");
+				controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
 
-			});
+					console.log(JSON.stringify(message, null, 2));
+				  	bot.reply(message, "hi you!");
 
+				});
+
+
+			}
 
 		}
 

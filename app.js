@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-slackbot();
+slackbot(); // Start all of the bots for all of the teams who have installed the app.
 
 app.use('/', routes);
 app.use('/users', users);
