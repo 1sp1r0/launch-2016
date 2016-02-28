@@ -144,14 +144,14 @@ router.get('/slack/oauth', function(req, res){
 					content: "Installed Successfully! Hop into Slack and call up some huddles."
 				};
 
-				if(error) content.content = "Failed to Install :(";
+				if(error) content.content = "Failed to Install huddle into the team. :(";
 				else ACCESS_TOKEN = body;
 				
 				var huddleFirebase = new firebase('https://launch2016.firebaseio.com/teams');
 
 				huddleFirebase.child(body.team_id).once('value', function(snapshot){
 
-					if(!snapshot.exists()){
+					if(!snapshot.exists() && body.team_id){
 
 						// Create the firebase object to save the tokens for this particular team.
 						huddleFirebase.child(body.team_id).set(body);
