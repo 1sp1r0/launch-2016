@@ -141,7 +141,7 @@ router.get('/slack/oauth', function(req, res){
 
 				var content = {
 					title: 'Huddle', 
-					content: "Installed Successfully!"
+					content: "Installed Successfully! Hop into Slack and call up some huddles."
 				};
 
 				if(error) content.content = "Failed to Install :(";
@@ -162,14 +162,14 @@ router.get('/slack/oauth', function(req, res){
 					} else {
 
 						console.log(chalk.yellow(body.team_name), "team already exists!");
-						content.content = "Your team already has Huddle integrated into slack! Way to go!";
-						return res.render('index', content);
+						content.content = "Your team already has Huddle integrated into Slack! Way to go!";
+						return res.render('base', content);
 					
 					}
 
 				});
 
-				return res.render('index', content);
+				return res.render('base', content);
 
 			});		
 
@@ -178,8 +178,8 @@ router.get('/slack/oauth', function(req, res){
 	} catch(e){
 
 		console.log("[/slack/oauth] Exception raised", chalk.red(e));
-		content.content = "Oh Man! We messed up, please try again later.";
-		return res.render('index', content);
+		content.content = "Oh Man! Something's not right. Please try again later.";
+		return res.render('base', content);
 
 	}
 	
