@@ -22,7 +22,7 @@ var runBot = function(teamtoken){
 
 var runBots = function(){
 	
-	firebaseReference.on('value', function(snapshot){
+	firebaseReference.once('value', function(snapshot){
 
 		var teams = snapshot.val();
 
