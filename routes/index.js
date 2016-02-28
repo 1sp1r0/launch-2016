@@ -48,9 +48,10 @@ router.get('/slack/oauth', function(req, res){
 	if(req.query.code && req.query.state === SLACK_CLIENT_STATE){
 		
 		console.log("\n\nQUERY\n", req.query);
+		
 		var query = querystring.stringify({
 			client_id: SLACK_CLIENT_ID,
-                	client_secret: SLACK_CLIENT_SECRET,
+            client_secret: SLACK_CLIENT_SECRET,
 			code: req.query.code,
 			redirect_url: REDIRECT_URI
 		});
@@ -85,8 +86,8 @@ router.get('/slack/oauth', function(req, res){
 
 				ACCESS_TOKEN = json;
 				var content = {
-					title: 'Huddle Successfully Installed', 
-					content: body
+					title: 'Huddle', 
+					content: "Installed Successfully!"
 				};
 				
 				return res.render('index', content);
@@ -105,6 +106,56 @@ router.get('/slack/oauth', function(req, res){
 
 	}
 	
+});
+
+router.get('/slack/rtm', function(req, res){
+
+	var query = querystring.stringify({
+		token: ACCESS_TOKEN.bot.bot_access_token
+	}):
+
+	var options = {
+		method: 'GET',
+		hostname: 'slack.com',
+		path: '/api/rtm.start'
+	};
+		
+	var slackrequest = https.request(options, function(slackresponse){
+		
+		var body = '';
+		slackresponse.setEncoding('utf-8');
+		slackresponse.on('data', function(data){	
+			body += data;
+		});
+
+		slackresponse.on('end', function(){
+			
+			var json = null;
+
+			try {
+
+				json = JSON.parse(body);
+
+			} catch(e){
+
+				console.error('[/slack/rtm]', e);
+									
+			}
+
+			console.log("\n\n", body, "\n\n");
+
+		});
+
+		slackresponse.on('error', function(error){
+
+			console.error('[/slack/rtm/] Error', error);
+
+		});
+
+	});
+
+	return slackrequest.end();
+
 });
 
 module.exports = router;
