@@ -7,6 +7,7 @@
 var app = require('../app');
 var chalk = require('chalk');
 var cluster = require('cluster');
+var slackbot = require('../slackbot');
 var debug = require('debug')('sample-app:server');
 var http = require('http');
 
@@ -114,5 +115,6 @@ if(cluster.isMaster){
 } else {
 
   main();
+  slackbot.runBots(); // Start all of the bots for all of the teams who have installed the app.
 
 }

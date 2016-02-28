@@ -48,9 +48,11 @@ var runBots = function(){
 					
 					console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
 					if(startedBots.indexOf(team) < 0) {
+
 						startedBots.push(team);
 						return runBot(teams[team].bot.bot_access_token);
 					}
+					
 					
 				} else {
 

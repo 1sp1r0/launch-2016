@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var slackbot = require('./slackbot');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -23,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-slackbot.runBots(); // Start all of the bots for all of the teams who have installed the app.
+
 
 app.use('/', routes);
 app.use('/users', users);
