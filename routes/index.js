@@ -118,6 +118,11 @@ router.get('/slack', function(req, res, next){
 
 router.get('/slack/oauth', function(req, res){
 
+	var content = {
+		title: 'Huddle', 
+		content: "Installed Successfully! Hop into Slack and call up some huddles."
+	};
+
 	try {
 
 		if(req.query.code && req.query.state === SLACK_CLIENT_STATE){
@@ -138,11 +143,6 @@ router.get('/slack/oauth', function(req, res){
 			};
 			
 			request("[/slack/oauth]", options, function(error, body){
-
-				var content = {
-					title: 'Huddle', 
-					content: "Installed Successfully! Hop into Slack and call up some huddles."
-				};
 
 				if(error) content.content = "Failed to Install huddle into the team. :(";
 				else ACCESS_TOKEN = body;
