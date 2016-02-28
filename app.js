@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var slackbot = require('./slackbot');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -22,22 +23,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+slackbot();
+
 app.use('/', routes);
 app.use('/users', users);
-
-var Botkit = require('botkit');
-var controller = Botkit.slackbot();
-
-var bot = controller.spawn({
-  // token: "xoxb-23414914225-5z3ZNMJPJtHOJQRlJkXFffMC"
-  token: "xoxb-23414914225-2JaFCJchgVD2yz9urz3Gm8Go"
-}).startRTM();
-
-controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
-
-  bot.reply(message, "hi you!");
-
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
