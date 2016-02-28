@@ -112,12 +112,12 @@ router.get('/slack/rtm', function(req, res){
 
 	var query = querystring.stringify({
 		token: ACCESS_TOKEN.bot.bot_access_token
-	}):
+	});
 
 	var options = {
 		method: 'GET',
 		hostname: 'slack.com',
-		path: '/api/rtm.start'
+		path: ['/api/rtm.start', query].join("?")
 	};
 		
 	var slackrequest = https.request(options, function(slackresponse){
