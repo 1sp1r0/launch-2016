@@ -3,10 +3,8 @@ var router = express.Router();
 
 var http = require('http');
 var https = require('https');
+var firebase = require('firebase');
 var querystring = require('querystring');
-
-var Botkit = require('botkit');
-var controller = Botkit.slackbot();
 
 var SLACK_CLIENT_STATE = "inn-launch2016";
 var SLACK_CLIENT_ID = '23387650483.23407311957';
@@ -125,6 +123,14 @@ router.get('/slack/oauth', function(req, res){
 			if(error) content.content = "Failed to Install :(";
 			else ACCESS_TOKEN = body;
 			
+			var huddleFirebase = new firebase('https://launch2016.firebaseio.com/teams');
+
+			var object = {};
+
+			object[body.team_id] = body;
+			huddleFirebase.set(object);
+
+
 			return res.render('index', content);
 
 		});
@@ -133,40 +139,6 @@ router.get('/slack/oauth', function(req, res){
 	
 });
 
-router.get('/slack/rtm', function(req, res){
 
-	var bot = controller.spawn({
-		token: ACCESS_TOKEN.bot.bot_access_token
-	});
-
-	bot.startRTM(function(error, bot, payload){
-
-		if(error){
-
-			return console.error("[/slack/rtm] Couldn't connect to the client because: ", error);
-
-		}
-
-		controller.hears(["hi"], ['direct_message' , 'direct_mention' , 'mention'], function(bot, message){
-
-			bot.startConversation(message, function(err, converstaion){
-
-
-				if(error){
-
-					return console.error("[/slack/rtm] Error ", error);
-
-				}
-
-				converstaion.say("YO, what's up!");
-
-			});
-
-		})
-
-
-	});
-
-});
 
 module.exports = router;
