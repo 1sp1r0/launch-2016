@@ -68,7 +68,7 @@ var request = function(method, options, callback){
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  res.render('index', { title: 'Huddle', content: 'Welcome to huddle' });
+  res.render('index', { title: 'Huddle', content: 'Simplifying teams meetings since 2016!' });
 
 });
 
@@ -122,7 +122,7 @@ router.get('/slack/oauth', function(req, res){
 		view: "base",
 		viewcontent: {
 			title: 'Huddle', 
-			content: "Installed Successfully! Hop into Slack and call up some huddles."
+			content: "Was installed successfully! Woo Ho! Hop over Slack and start call up some huddles."
 		}
 	};
 
@@ -149,7 +149,7 @@ router.get('/slack/oauth', function(req, res){
 
 				if(error) {
 					
-					content.viewcontent.content = "Failed to Install huddle into the team. :(";
+					content.viewcontent.content = "Failed to install Huddle into the team. :( Please try again.";
 					return res.render(content.view, content.viewcontent);
 
 				}
@@ -170,7 +170,7 @@ router.get('/slack/oauth', function(req, res){
 
 						} else {
 
-							console.log(chalk.yellow(body.team_name), "team already exists!");
+							console.log(chalk.bold.yellow(body.team_name), "team already exists!");
 							content.viewcontent.content = "Your team already has Huddle integrated into Slack! Way to go!";
 							return res.render(content.view, content.viewcontent);
 						
@@ -188,10 +188,6 @@ router.get('/slack/oauth', function(req, res){
 
 				}
 
-				// res.path = "/success";
-				// res.url = "/success";
-				// return res.render(content.view, content.viewcontent);
-
 			}.bind(this));		
 
 		}
@@ -199,7 +195,7 @@ router.get('/slack/oauth', function(req, res){
 	} catch(e){
 
 		console.log("[/slack/oauth] Exception raised", chalk.red(e));
-		content.content = "Oh Man! Something's not right. Please try again later.";
+		content.content = "Oh Man! Somethings not right. Please try again later.";
 		res.render('base', content);
 		return res.end();
 
