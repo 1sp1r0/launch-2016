@@ -173,6 +173,7 @@ router.get('/slack/oauth', function(req, res){
 				
 				} else {
 
+					console.log(body);
 					console.log(chalk.red(req.url, "was used."));
 					return res.redirect('/');
 
