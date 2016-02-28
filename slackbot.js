@@ -47,12 +47,12 @@ var runBots = function(){
 				if(teams[team].bot && teams[team].bot.bot_access_token){
 					
 					console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
-					if(startedBots.indexOf(team) < 0) {
+					// if(startedBots.indexOf(team) < 0) {
 
-						startedBots.push(team);
-						return runBot(teams[team].bot.bot_access_token);
-					}
-					
+						// startedBots.push(team);
+						runBot(teams[team].bot.bot_access_token);
+					// }
+
 					
 				} else {
 
