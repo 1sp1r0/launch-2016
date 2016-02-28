@@ -147,9 +147,20 @@ router.get('/slack/rtm', function(req, res){
 
 		}
 
-		controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
+		controller.hears(["hi"], ['direct_message' , 'direct_mention' , 'mention'], function(bot, message){
 
-			bot.startCoversation('Hi');
+			bot.startConversation(message, function(err, converstaion){
+
+
+				if(error){
+
+					return console.error("[/slack/rtm] Error ", error);
+
+				}
+
+				converstaion.say("YO, what's up!");
+
+			});
 
 		})
 
