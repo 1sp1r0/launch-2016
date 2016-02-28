@@ -1,5 +1,11 @@
+var chalk = require('chalk');
+var firebase = require('firebase');
+var firebaseReference = new firebase('https://launch2016.firebaseio.com/teams');
 
-module.exports.runBot = function(teamtoken){
+var runBot = function(teamtoken){
+
+	var Botkit = require('botkit');
+	var controller = Botkit.slackbot();
 
 	var bot = controller.spawn({
 	  token: teamtoken
@@ -14,15 +20,8 @@ module.exports.runBot = function(teamtoken){
 
 };
 
-module.exports.runBots = function(){
-
-	var chalk = require('chalk');
-	var Botkit = require('botkit');
-	var firebase = require('firebase');
-	var controller = Botkit.slackbot();
-
-	var firebaseReference = new firebase('https://launch2016.firebaseio.com/teams')
-
+var runBots = function(){
+	
 	firebaseReference.on('value', function(snapshot){
 
 		var teams = snapshot.val();
@@ -36,7 +35,6 @@ module.exports.runBots = function(){
 					console.log("Starting Bot for", chalk.bold.cyan(teams[team].team_name));
 					runBot(teams[team].bot.bot_access_token);
 					
-				
 				} else {
 
 					console.error(chalk.red(team), "was saved incorrectly.");
@@ -50,3 +48,6 @@ module.exports.runBots = function(){
 	});
 
 };
+
+module.exports.runBot = runBot;
+module.exports.runBots = runBots;
