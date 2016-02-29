@@ -52,7 +52,7 @@ var runBot = function(teamtoken){
 				    		callback: function(res, conv){
 				    			conv.say('Okie Dokie?');
 				    			message.user = initiator;
-				    			message.text = [user, " rejected invite."].join(" ")
+				    			message.text = [['<@',user,'>'].join(""), " rejected invite."].join(" ")
 				    			bot.say(message);
 				    			conv.next();
 				    		},
@@ -62,7 +62,7 @@ var runBot = function(teamtoken){
 		    				callback: function(res, conv){
 		    					conv.say("Cool, See you then.");
 		    					message.user = initiator;
-		    					message.text = [user, " accepted invite."].join(" ");
+		    					message.text = [['<@',user,'>'].join(""), " accepted invite."].join(" ");
 		    					bot.say(message);
 		    					conv.next();
 		    				}	

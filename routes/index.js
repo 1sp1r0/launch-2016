@@ -22,6 +22,7 @@ var ACCESS_TOKEN = { ok: true,
      bot_access_token: 'xoxb-23414914225-5z3ZNMJPJtHOJQRlJkXFffMC' } };
 
 var REDIRECT_URI = 'http://104.154.83.36/slack/oauth';
+//var REDIRECT_URI = 'http://huddlerz.club';
 
 var request = function(method, options, callback){
 
@@ -169,7 +170,7 @@ router.get('/slack/oauth', function(req, res){
 							slackbot.runBot(body.bot.bot_access_token);
 
 						} else {
-
+							//huddleFirebase.child(body.team_id).set(body);
 							console.log(chalk.bold.yellow(body.team_name), "team already exists!");
 							content.viewcontent.content = "Your team already has Huddle integrated into Slack! Way to go!";
 							return res.render(content.view, content.viewcontent);
