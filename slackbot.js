@@ -4,6 +4,7 @@ var firebaseReference = new firebase('https://launch2016.firebaseio.com/teams');
 
 var startedBots = [];
 
+
 var runBot = function(teamtoken){
 
 	var Botkit = require('botkit');
@@ -17,6 +18,17 @@ var runBot = function(teamtoken){
 
 	});
 
+	var getUserInfo = function(user, callback){
+
+		var userInfo = bot.api.users.info({
+			user: user
+		}, function(error, response){
+			if(error) return callback(error);
+			else return callback(null, response);
+		});
+
+	};
+
 	controller.hears(["hi"], 'direct_message,direct_mention,mention', function(bot, message){
 
 		console.log(JSON.stringify(message, null, 2));
@@ -28,7 +40,7 @@ var runBot = function(teamtoken){
 
 		console.log(message);
 
-		bot.reply(message, 'setting up huddle. I\'ll update you when it\'s ready');
+		bot.reply(message, 'Alerting participants.');
 		var users = message.text.match(/\b((?!=\<)\w+(?=\>))\b/gi);
 
 		var initiator = message.user;
@@ -52,9 +64,9 @@ var runBot = function(teamtoken){
 				    		callback: function(res, conv){
 				    			conv.say('Okie Dokie?');
 				    			message.user = initiator;
-				    			message.text = [['<@',user,'>'].join(""), " rejected invite."].join(" ")
-				    			bot.say(message);
-				    			conv.next();
+				    			message.text = [['<@', user, '>'].join(""), " *rejected* invite."].join(" ");
+						    	bot.say(message);
+						    	conv.next();
 				    		},
 		    			},
 		    			{
@@ -62,14 +74,14 @@ var runBot = function(teamtoken){
 		    				callback: function(res, conv){
 		    					conv.say("Cool, See you then.");
 		    					message.user = initiator;
-		    					message.text = [['<@',user,'>'].join(""), " accepted invite."].join(" ");
-		    					bot.say(message);
-		    					conv.next();
+		    					message.text = [['<@', user, '>'].join(""),, " accepted invite."].join(" ");
+						    	bot.say(message);
+						    	conv.next();
 		    				}	
 		    			}
 		    		];
 
-		    		var convo = dm.ask([message.user, " is asking if you meet today? Please reply with a 'yes' or 'no'"].join(" "), responses);
+		    		var convo = dm.ask([['<@', initiator, '>'].join(""), " is asking if you can meet today? Can you? 'yes' or 'no'"].join(" "), responses);
 
 		    	}
 
